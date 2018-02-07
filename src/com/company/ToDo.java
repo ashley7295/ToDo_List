@@ -15,15 +15,17 @@ public class ToDo {
     private int priority;
     private String required;
     private String type;
+    private String notes;
 
 
     //To do constructor
-    public ToDo (String description, Date dueDate, int priority, String required, String type){
+    public ToDo (String description, Date dueDate, int priority, String required, String type, String notes){
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
         this.required = required;
         this.type = type;
+        this.notes = notes;
     }
 
 
@@ -42,6 +44,9 @@ public class ToDo {
 
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
+
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
 
 
 

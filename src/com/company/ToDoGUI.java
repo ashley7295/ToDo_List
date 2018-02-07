@@ -27,8 +27,11 @@ public class ToDoGUI extends JFrame {
     private JButton deleteButton;
     private JButton completeButton;
     private JButton addButton;
+    private JButton quitButton;
+
+    //JLabels for status for the User
     private JLabel statusOfUserAction;
-    private JLabel todaysDateLabel;
+    //need to add todays date lable and
 
     //Task components
     private JComboBox priorityComboBox;
@@ -36,16 +39,14 @@ public class ToDoGUI extends JFrame {
     private JCheckBox requiredCheckBox;
     private JSpinner dateSpinner;
     private JTextField descriptionTextField;
+    private JTextField notesTextField;
 
     //JList's
     private JList<ToDo> eventJList;
-    private JList<ToDo> toDoJList;
     private JList<ToDo> completeJList;
 
 
-
     private DefaultListModel<ToDo> eventListModel;
-    private DefaultListModel<ToDo> toDoListModel;
     private DefaultListModel<ToDo> completeListModel;
 
 
@@ -58,7 +59,6 @@ public class ToDoGUI extends JFrame {
     //Just for organizational purposes (not sure if it'll be needed later) i am creating two separate arrayLists for the different task types
     ArrayList<ToDo> todoTask = new ArrayList<>();
 
-    ArrayList<ToDo> eventTask = new ArrayList<>();
 
     ToDoGUI(ToDoManager manager){
         this.manager = manager;
@@ -70,7 +70,6 @@ public class ToDoGUI extends JFrame {
 
         //adding the methods that configure the JLists
         eventListModelConfig();
-        toDoListModelConfig();
         completeListModelConfig();
 
         //methods to configure the ComboBoxes, Date Spinner & today's Date Label
@@ -113,23 +112,26 @@ public class ToDoGUI extends JFrame {
                 }else
                     required = ToDoData.required[1];
 
+                //this is getting the notes from the user, i wanted to make this optional so if there isn;t any input in the TextField it will be null
+                String notes;
+
+                if(notesTextField.getText().isEmpty()){
+                    notes = null;
+                }else
+                    notes = notesTextField.getText();
+
                 //creating a new To do task Object
-                ToDo newTask = new ToDo(task, dueDate, priority, required, taskType);
+                ToDo newTask = new ToDo(task, dueDate, priority, required, taskType, notes);
 
 
                 //once the object is created check to ensure there was data entered in the description text field, if not display an error
                 if(descriptionTextField.getText().isEmpty() || descriptionTextField.getText() == null){
                     showMessageDialog("ERROR, Please enter your Task");
-                }else if(taskType.equals(0)){
+                }else
                     masterToDoList.add(newTask);
                     todoTask.add(newTask);
-                    toDoListModel.addElement(newTask);
-                    statusOfUserAction.setText(ToDoData.TASK_ADDED);}         //if there was data entered, check to see if it was a To do or an upcoming Event
-                else if (taskType.equals(1)){                   //depending on which was selected, add it to the corresponding list
-                    masterToDoList.add(newTask);
                     eventListModel.addElement(newTask);
-                    eventTask.add(newTask);
-                    statusOfUserAction.setText(ToDoData.TASK_ADDED);}}});
+                    statusOfUserAction.setText(ToDoData.TASK_ADDED);}});
 
 
 
@@ -139,14 +141,13 @@ public class ToDoGUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-                int selectedToDo = toDoJList.getSelectedIndex();
                 int selectedEvent = eventJList.getSelectedIndex();
 
-                if(selectedToDo == -1 & selectedEvent == -1){
+                if(selectedEvent == -1){
                     showMessageDialog("ERROR, please select a Task or Event");
                 }else{
-                    ToDo toDoToRemove = toDoJList.getSelectedValue();
-                    toDoListModel.removeElement(toDoToRemove);
+                    ToDo toDoToRemove = eventJList.getSelectedValue();
+                    eventListModel.removeElement(toDoToRemove);
                     statusOfUserAction.setText(ToDoData.TASK_DELETED);
 
 
@@ -175,10 +176,6 @@ public class ToDoGUI extends JFrame {
         eventJList.setModel(eventListModel);
         eventJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); }
 
-    protected void toDoListModelConfig(){
-        toDoListModel = new DefaultListModel<>();
-        toDoJList.setModel(toDoListModel);
-        toDoJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION); }
 
     protected void completeListModelConfig(){
         completeListModel = new DefaultListModel<>();
@@ -205,7 +202,7 @@ public class ToDoGUI extends JFrame {
         SimpleDateFormat sfd = new SimpleDateFormat("MM-dd-yyy");
         Date todaysDate = new Date();
 
-        todaysDateLabel.setText(sfd.format(todaysDate));
+        //todaysDateLabel.setText(sfd.format(todaysDate));
     }
 
 
@@ -255,6 +252,7 @@ public class ToDoGUI extends JFrame {
  * Figure out how to push everything to GitHub
  * Figure out how to connect everything to a database
  * Make an Exit button
+ * Remove To do JList
  *
  *
  * */
