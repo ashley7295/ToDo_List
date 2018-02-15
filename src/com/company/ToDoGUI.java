@@ -8,6 +8,7 @@ package com.company;
 import javax.swing.*;
 import javax.swing.text.DateFormatter;
 
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
@@ -19,19 +20,20 @@ import java.util.Date;
 
 public class ToDoGUI extends JFrame {
 
-    //Action components
 
-
+    //this is the mainJPanel
     private JPanel mainPanel;
 
+    //Buttons or User actions
     private JButton deleteButton;
     private JButton completeButton;
     private JButton addButton;
     private JButton quitButton;
 
-    //JLabels for status for the User
+    //JLabels or status for the User
     private JLabel statusOfUserAction;
-    //need to add todays date lable and
+    private JLabel todaysDateLabel;
+
 
     //Task components
     private JComboBox priorityComboBox;
@@ -46,24 +48,25 @@ public class ToDoGUI extends JFrame {
     private JList<ToDo> completeJList;
 
 
+
     private DefaultListModel<ToDo> eventListModel;
     private DefaultListModel<ToDo> completeListModel;
 
 
     ToDoManager manager;
+    ToDoDB database;
 
 
     //master Array list of Ticket Objects (may not ultimately need this once DBU is configured
     ArrayList<ToDo> masterToDoList = new ArrayList<>();
 
-    //Just for organizational purposes (not sure if it'll be needed later) i am creating two separate arrayLists for the different task types
-    ArrayList<ToDo> todoTask = new ArrayList<>();
 
 
     ToDoGUI(ToDoManager manager){
         this.manager = manager;
 
         setContentPane(mainPanel);
+        setPreferredSize(new Dimension(1000, 500));
         pack();
         setVisible(true);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -97,12 +100,10 @@ public class ToDoGUI extends JFrame {
                 //setting up the date formatting to get the date from the spinner
                 SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyy");
 
+                String dueDate = String.valueOf(sdf.format(dateSpinner.getValue()));
                 //needing an exception handler to pass the date
-                Date dueDate = null;
-                try {
-                    dueDate = sdf.parse(dateSpinner.getToolTipText());
-                } catch (ParseException e1) {
-                    e1.printStackTrace(); }
+
+
 
                 //checking to see if the required check box is checked
                 String required;
@@ -129,9 +130,12 @@ public class ToDoGUI extends JFrame {
                     showMessageDialog("ERROR, Please enter your Task");
                 }else
                     masterToDoList.add(newTask);
-                    todoTask.add(newTask);
                     eventListModel.addElement(newTask);
-                    statusOfUserAction.setText(ToDoData.TASK_ADDED);}});
+
+                    statusOfUserAction.setText(ToDoData.TASK_ADDED);
+
+                    database.addNewData(task, dueDate, priority, required, taskType, notes);
+            }});
 
 
 
@@ -142,30 +146,58 @@ public class ToDoGUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 int selectedEvent = eventJList.getSelectedIndex();
+                int selectedCompletedEvent = completeJList.getSelectedIndex();
 
-                if(selectedEvent == -1){
-                    showMessageDialog("ERROR, please select a Task or Event");
+
+                if(selectedEvent == -1 && selectedCompletedEvent == -1){
+                    showMessageDialog("ERROR, please select an item to Delete.");
                 }else{
                     ToDo toDoToRemove = eventJList.getSelectedValue();
                     eventListModel.removeElement(toDoToRemove);
+
                     statusOfUserAction.setText(ToDoData.TASK_DELETED);
 
+                    ToDo toDoToRemoveCompleted = completeJList.getSelectedValue();
+                    completeListModel.removeElement(toDoToRemoveCompleted);
 
-                }}});
+                    statusOfUserAction.setText(ToDoData.TASK_PERM_DELETED);
+
+                    String task = toDoToRemove.getDescription();
+                    database.deleteData(task);
+                }
+
+
+            }});
 
         completeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
 
+                int selectedEventToComplete = eventJList.getSelectedIndex();
+
+                if(selectedEventToComplete == -1){
+                    showMessageDialog("Please Select an item to Complete.");
+                }else{
+                    ToDo toDoToComplete = eventJList.getSelectedValue();
+                    eventListModel.removeElement(toDoToComplete);
+                    completeListModel.addElement(toDoToComplete);
+                    statusOfUserAction.setText(ToDoData.TASK_COMPLETED);
+                }
+
                 //get selected item from JList, move it to completed List
                 //Maybe add/configure completed Status? (ex: successfully completed, past due, date completed?)
 
-            }
-        });
+            }});
 
+        quitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
+            System.exit(0);
 
+        }
+    });
 
     }
 
@@ -185,6 +217,7 @@ public class ToDoGUI extends JFrame {
 
 
     protected void priorityComboBoxConfig(){
+
         priorityComboBox.addItem(ToDoData.priorityLevel[0]);
         priorityComboBox.addItem(ToDoData.priorityLevel[1]);
         priorityComboBox.addItem(ToDoData.priorityLevel[2]);
@@ -193,7 +226,11 @@ public class ToDoGUI extends JFrame {
 
     protected void taskTypeComboBoxConfig(){
         taskTypeComboBox.addItem(ToDoData.taskType[0]);
-        taskTypeComboBox.addItem(ToDoData.taskType[1]); }
+        taskTypeComboBox.addItem(ToDoData.taskType[1]);
+        taskTypeComboBox.addItem(ToDoData.taskType[2]);
+        taskTypeComboBox.addItem(ToDoData.taskType[3]);
+        taskTypeComboBox.addItem(ToDoData.taskType[4]);
+        taskTypeComboBox.addItem(ToDoData.taskType[5]); }
 
 
     protected void todaysDateLabelConfig(){
@@ -202,7 +239,7 @@ public class ToDoGUI extends JFrame {
         SimpleDateFormat sfd = new SimpleDateFormat("MM-dd-yyy");
         Date todaysDate = new Date();
 
-        //todaysDateLabel.setText(sfd.format(todaysDate));
+        todaysDateLabel.setText(sfd.format(todaysDate));
     }
 
 
@@ -237,22 +274,13 @@ public class ToDoGUI extends JFrame {
  *
  * Things to do for my to do program:
  *
- * Action Listeners:
- * STARTED Delete button - deletes a selected item from the to doJList or the Events JList
- * DONE Add button - Adds a task object to either the to do JList or the Events JList depending on what task Type was selected
- * STARTED Complete button - moves a to do or an event (or Task Object) to the Complete JList
+ * DATABASE:
+ * Configure add and delete Methods for a database
+ * -outline or skeleton is set for the methods, refer to Chapter 10 once methods are resolved there
  *
+ * ADD COMMENTS
  *
- * Configurations:
- * Deleting Tasks from certain JLists (how to check to see which JList was selected from
- * Adding an overdue to do or Event to the completed JList after the current time is past the due date
- *
- * Misc:
- * Figure out how to get the program to initially start
- * Figure out how to push everything to GitHub
- * Figure out how to connect everything to a database
- * Make an Exit button
- * Remove To do JList
+ * WRITE READ ME
  *
  *
  * */

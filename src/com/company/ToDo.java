@@ -11,7 +11,7 @@ public class ToDo {
 
     //to do components
     private String description;
-    private Date dueDate;
+    private String dueDate;
     private int priority;
     private String required;
     private String type;
@@ -19,7 +19,7 @@ public class ToDo {
 
 
     //To do constructor
-    public ToDo (String description, Date dueDate, int priority, String required, String type, String notes){
+    public ToDo (String description, String dueDate, int priority, String required, String type, String notes){
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
@@ -33,8 +33,8 @@ public class ToDo {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public Date getDueDate() { return dueDate; }
-    public void setDueDate(Date dueDate) { this.dueDate = dueDate; }
+    public String getDueDate() { return dueDate; }
+    public void setDueDate(String dueDate) { this.dueDate = dueDate; }
 
     public int getPriority() { return priority; }
     public void setPriority(int priority) { this.priority = priority; }
@@ -51,4 +51,9 @@ public class ToDo {
 
 
 
+    public String toString(){
+        return "|Task: " + this.description + "| Due: " + this.dueDate + "\n" +
+                "| Priority Level: " + this.priority + " and this is " + this.required +
+                " | " + "\n" + this.type + " | Notes: " + this.notes + " |";
+    }
 }
