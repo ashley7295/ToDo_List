@@ -14,7 +14,8 @@ public class ToDoManager {
         // write your code here
 
         ToDoManager toDoManager = new ToDoManager();
-        ToDoGUI todoManager = new ToDoGUI(toDoManager);
+        ToDoGUI toDoGUI = new ToDoGUI(toDoManager);
+
 
     }
 

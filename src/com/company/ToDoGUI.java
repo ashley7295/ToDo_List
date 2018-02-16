@@ -54,7 +54,7 @@ public class ToDoGUI extends JFrame {
 
 
     ToDoManager manager;
-    ToDoDB database;
+    ToDoDB database = new ToDoDB();
 
 
     //master Array list of Ticket Objects (may not ultimately need this once DBU is configured
@@ -196,6 +196,9 @@ public class ToDoGUI extends JFrame {
 
             System.exit(0);
 
+            ArrayList<ToDo> databaseList = database.showDatabaseContents();
+            System.out.println(databaseList);
+
         }
     });
 
@@ -274,13 +277,15 @@ public class ToDoGUI extends JFrame {
  *
  * Things to do for my to do program:
  *
- * DATABASE:
- * Configure add and delete Methods for a database
- * -outline or skeleton is set for the methods, refer to Chapter 10 once methods are resolved there
+ * TEST
  *
  * ADD COMMENTS
  *
  * WRITE READ ME
+ *
+ * CONFIGURE DATABASE DRIVER
+ *
+ * PUT PROJECT IN ZIP FILE??
  *
  *
  * */
