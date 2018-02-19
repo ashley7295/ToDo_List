@@ -3,6 +3,8 @@ package com.company;
 import java.sql.*;
 import java.util.ArrayList;
 
+import static java.lang.Class.forName;
+
 /**
  *This class is meant to connect to and communicate with the database
  **/
@@ -10,7 +12,6 @@ import java.util.ArrayList;
 
 public class ToDoDB {
 
-    //adding the driver (not sure if needed)
     static String jdbc_driver = "com.mysql.cj.jdbc.Driver";
     static String db_url = "jdbc:mysql://localhost:3306/todo";
     static String user = System.getenv("MYSQL_USER");      // TODO set this environment variable
@@ -20,10 +21,24 @@ public class ToDoDB {
     ToDoGUI showMessage;
 
 
+    public static void main(String[] args){
+
+        //for locating the database driver
+        try {
+            Class.forName(jdbc_driver);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("Cannot locate driver");
+            System.exit(-1);
+        }
+
+    }
+
 
     public void addNewData(String task, String date, int priority, String required, String type, String notes){
 
         try(Connection conn = DriverManager.getConnection(db_url, user, password);
+
 
             Statement statement = conn.createStatement()){
 

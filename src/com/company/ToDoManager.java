@@ -17,13 +17,7 @@ public class ToDoManager {
         ToDoGUI toDoGUI = new ToDoGUI(toDoManager);
 
 
+
     }
-
-
-
-
-
-
-
 
 }
