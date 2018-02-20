@@ -12,20 +12,16 @@ import static java.lang.Class.forName;
 
 public class ToDoDB {
 
-    static String jdbc_driver = "com.mysql.cj.jdbc.Driver";
-    static String db_url = "jdbc:mysql://localhost:3306/todo";
-    static String user = System.getenv("MYSQL_USER");      // TODO set this environment variable
-    static String password = System.getenv("MYSQL_PASS");   // TODO set this environment variable
-
-
     ToDoGUI showMessage;
 
 
     public static void main(String[] args){
 
+
         //for locating the database driver
         try {
-            Class.forName(jdbc_driver);
+            Class.forName(ToDoData.jdbc_driver);
+            System.out.println("Success maybe");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             System.out.println("Cannot locate driver");
@@ -37,19 +33,13 @@ public class ToDoDB {
 
     public void addNewData(String task, String date, int priority, String required, String type, String notes){
 
-        try(Connection conn = DriverManager.getConnection(db_url, user, password);
-
-
+        try(Connection conn = DriverManager.getConnection(ToDoData.db_url, ToDoData.user, ToDoData.password);
             Statement statement = conn.createStatement()){
 
 
-            //this is the statement that is looking for the product in the database to ensure it exsists before it is updated.
-
-
-                //this is creating a new Product Object
 
                     //the statement for the database that adds or inserts new data into the inventory database
-                    String addNew = "INSERT INTO todo VALUES (?,?,?,?,?,?)";
+                    String addNew = "INSERT INTO tasks VALUES (?,?,?,?,?,?)";
                     PreparedStatement addNewPS = conn.prepareStatement(addNew);
 
                     addNewPS.setString(1, task);
@@ -61,7 +51,7 @@ public class ToDoDB {
 
                     System.out.println(addNewPS);
 
-                    int n = statement.executeUpdate(addNew);
+                    int n = addNewPS.executeUpdate(addNew);
 
                     showMessage.showMessageDialog("Item added to database");
 
@@ -71,22 +61,18 @@ public class ToDoDB {
 
 
 
-                //if (toDoFound == 0){
-                //    showMessage.showMessageDialog("Item already in Database");
-                //}
-
         } catch (SQLException e) {
                  e.printStackTrace(); }}
 
 
     public void deleteData(String task){
 
-        try(Connection conn = DriverManager.getConnection(db_url, user, password);
+        try(Connection conn = DriverManager.getConnection(ToDoData.db_url, ToDoData.user,ToDoData.password);
 
             Statement statement = conn.createStatement()) {
 
 
-            String deleteTask = "DELETE FROM todo WHERE description = ?";
+            String deleteTask = "DELETE FROM tasks WHERE description = ?";
             PreparedStatement deletePS = conn.prepareStatement(deleteTask);
 
             deletePS.setString(1, task);
@@ -107,10 +93,10 @@ public class ToDoDB {
 
     ArrayList<ToDo> listOfTasks = new ArrayList<>();
 
-    try(Connection conn = DriverManager.getConnection(db_url, user, password);
+    try(Connection conn = DriverManager.getConnection(ToDoData.db_url,ToDoData.user, ToDoData.password);
         Statement statement = conn.createStatement()){
 
-        String allData = "SELECT * FROM todo";
+        String allData = "SELECT * FROM tasks";
         ResultSet rs = statement.executeQuery(allData);
 
 

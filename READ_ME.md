@@ -13,4 +13,3 @@ The GUI also displays the current Date to make Planning easier for the user as w
 The database is called **todo** with the tables being **description**, **dueDate**, **priority**, **required**, **type**, **notes**.
 
 
-

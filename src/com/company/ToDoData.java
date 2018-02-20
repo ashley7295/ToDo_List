@@ -22,9 +22,9 @@ public class ToDoData {
     final static String TASK_PERM_DELETED = "Your task has been deleted from your list of completed Tasks.";
 
 
-
-
-
-
+    static String jdbc_driver = "com.mysql.cj.jdbc.Driver";
+    static String db_url = "jdbc:mysql://localhost:3306/todo";
+    static String user = System.getenv("MYSQL_USER");
+    static String password = System.getenv("MYSQL_PASS");
 
 }
