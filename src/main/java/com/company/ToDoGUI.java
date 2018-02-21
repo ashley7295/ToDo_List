@@ -140,28 +140,34 @@ public class ToDoGUI extends JFrame {
 
 
 
-
+        //delete button config
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+
+                //getting the item from the event and complete list that is selected
                 int selectedEvent = eventJList.getSelectedIndex();
                 int selectedCompletedEvent = completeJList.getSelectedIndex();
 
 
+                //if neither jlist is selected show a message dialog
                 if(selectedEvent == -1 && selectedCompletedEvent == -1){
                     showMessageDialog("ERROR, please select an item to Delete.");
+                    //otherwise get the value of the selected item from the list
                 }else{
+                    //for the event list
                     ToDo toDoToRemove = eventJList.getSelectedValue();
                     eventListModel.removeElement(toDoToRemove);
-
+                    //set status of user action
                     statusOfUserAction.setText(ToDoData.TASK_DELETED);
-
+                    //for the complete list
                     ToDo toDoToRemoveCompleted = completeJList.getSelectedValue();
                     completeListModel.removeElement(toDoToRemoveCompleted);
-
+                    //set status of user action
                     statusOfUserAction.setText(ToDoData.TASK_PERM_DELETED);
 
+                    //remove the item from the list and the database
                     String task = toDoToRemove.getDescription();
                     database.deleteData(task);
                 }
@@ -169,15 +175,19 @@ public class ToDoGUI extends JFrame {
 
             }});
 
+        //complete button action listener
         completeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
-
+                //get selected value
                 int selectedEventToComplete = eventJList.getSelectedIndex();
 
+
+                //if there is nothing selected...
                 if(selectedEventToComplete == -1){
                     showMessageDialog("Please Select an item to Complete.");
+                //else get the value and move it to the compplete list and set the status of user action
                 }else{
                     ToDo toDoToComplete = eventJList.getSelectedValue();
                     eventListModel.removeElement(toDoToComplete);
@@ -204,7 +214,7 @@ public class ToDoGUI extends JFrame {
 
     }
 
-    //insert methods required for configuring combo box's and date spinners
+    //insert methods required for configuring combo box's and date spinners and lists
 
     protected void eventListModelConfig(){
         eventListModel = new DefaultListModel<>();
@@ -277,13 +287,11 @@ public class ToDoGUI extends JFrame {
  *
  * Things to do for my to do program:
  *
- * TEST
  *
  * ADD COMMENTS
  *
  * WRITE READ ME
  *
- * CONFIGURE DATABASE DRIVER
  *
  * PUT PROJECT IN ZIP FILE??
  *
