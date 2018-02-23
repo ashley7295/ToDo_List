@@ -206,8 +206,6 @@ public class ToDoGUI extends JFrame {
 
             System.exit(0);
 
-            ArrayList<ToDo> databaseList = database.showDatabaseContents();
-            System.out.println(databaseList);
 
         }
     });
@@ -282,21 +280,6 @@ public class ToDoGUI extends JFrame {
 
 
 
-
-/**
- *
- * Things to do for my to do program:
- *
- *
- * ADD COMMENTS
- *
- * WRITE READ ME
- *
- *
- * PUT PROJECT IN ZIP FILE??
- *
- *
- * */
 
 
 
