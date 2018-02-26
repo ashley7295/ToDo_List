@@ -10,7 +10,7 @@ The user will be able to Add, Delete, or Complete an Item. as well as Quit the p
 The GUI also displays the current Date to make Planning easier for the user as well as messages after an action has been preformed.
 
 
-The database is called **todo** with the tables being **description**, **dueDate**, **priority**, **required**, **type**, **notes**.
+The database is called **todo** with the columns being **description**, **dueDate**, **priority**, **required**, **type**, **notes**.
 
 Grant all privileges.
 

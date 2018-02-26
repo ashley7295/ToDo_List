@@ -19,7 +19,6 @@ public class ToDoDB {
         //for locating the database driver
         try {
             Class.forName(ToDoData.jdbc_driver);
-            System.out.println("Success maybe");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             System.out.println("Cannot locate driver");
