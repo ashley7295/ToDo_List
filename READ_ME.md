@@ -12,6 +12,7 @@ The GUI also displays the current Date to make Planning easier for the user as w
 
 The database is called **todo** with the columns being **description**, **dueDate**, **priority**, **required**, **type**, **notes**.
 
-Grant all privileges.
 
- 
+-CREATE TABLE tasks (description(VARCHAR 200), dueDate(VARCHAR 50), priority int, required (VARCHAR 50), type (VARCHAR 50), notes (VARCHAR 500));
+
+-Grant all privileges 
